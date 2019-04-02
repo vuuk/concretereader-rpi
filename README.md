@@ -217,4 +217,6 @@ user@hostpc:~$ cd <qt-module>
 user@hostpc:~$ ~/raspi/qt5/bin/qmake
 user@hostpc:~$ make
 user@hostpc:~$ make install
+user@hostpc:~$ cd ..
+user@hostpc:~$ rsync -avz qt5pi pi@raspberrypi.local:/usr/local
 ```
