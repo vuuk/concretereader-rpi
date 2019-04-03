@@ -208,3 +208,15 @@ Write out and run the command:
 ```console
 pi@raspberry:~$ source ~/.profile
 ```
+## Installing additional modules for Qt
+As explained in the guide [wiki.qt.io - cross compiling qt for rpi](https://wiki.qt.io/RaspberryPi2EGLFS).\
+Do the same as when you installed the qtbase.
+```console
+user@hostpc:~$ git clone git://code.qt.io/qt/<qt-module>.git -b <qt-version>
+user@hostpc:~$ cd <qt-module>
+user@hostpc:~$ ~/raspi/qt5/bin/qmake
+user@hostpc:~$ make
+user@hostpc:~$ make install
+user@hostpc:~$ cd ..
+user@hostpc:~$ rsync -avz qt5pi pi@raspberrypi.local:/usr/local
+```
