@@ -29,18 +29,21 @@ SOURCES += \
         mainwindow.cpp \
     graphwidget.cpp \
     concrete_reading.cpp \
-    readingiodevice.cpp
+    menuwidget.cpp \
+    readingsmodel.cpp
 
 HEADERS += \
         mainwindow.h \
     graphwidget.h \
     serialcomhandler.h \
     concrete_reading.h \
-    readingiodevice.h
+    menuwidget.h \
+    readingsmodel.h
 
 FORMS += \
         mainwindow.ui \
-    graphwidget.ui
+    graphwidget.ui \
+    menuwidget.ui
 
 INCLUDEPATH += /home/kirk/Boost/boost_1_64_0/
 

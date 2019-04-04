@@ -7,6 +7,8 @@
 
 #include <QVector>
 #include <QTimer>
+#include <QThread>
+#include <deque>
 #include "serialcomhandler.h"
 #include "concrete_reading.h"
 #define X_RANGE 20000
@@ -17,18 +19,20 @@ class GraphWidget;
 
 extern const std::string g_PORT;
 extern const std::string g_PATTERN;
-
+class ReadingsModel;
 class GraphWidget : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit GraphWidget(QWidget *parent = nullptr);
     ~GraphWidget();
 public slots:
     void start();
     void stop();
+    void save_live_graph();
+private slots:
     void get_readings();
+private:
 private:
     Ui::GraphWidget *ui;
     QVector<concrete_reading> current_results;
@@ -36,7 +40,10 @@ private:
     SerialcomHandler<concrete_reading> &handler;
     QLineSeries* current_series;
     QChart* current_chart;
+    std::thread file_thread;
+    std::deque<concrete_reading> readings;
     long long prev_max;
+    ReadingsModel* model;
 };
 
 #endif // GRAPHWIDGET_H
