@@ -30,8 +30,30 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="GraphWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout"/>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>-4</x>
+      <y>-1</y>
+      <width>801</width>
+      <height>481</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="GraphWidget" name="graph_tab">
+     <attribute name="title">
+      <string>Graph</string>
+     </attribute>
+    </widget>
+    <widget class="MenuWidget" name="menu_tab">
+     <attribute name="title">
+      <string>Settings</string>
+     </attribute>
+    </widget>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -40,6 +62,12 @@
    <class>GraphWidget</class>
    <extends>QWidget</extends>
    <header location="global">graphwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MenuWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">menuwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

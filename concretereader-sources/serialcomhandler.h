@@ -12,9 +12,10 @@
 #include <regex>
 #include <iostream>
 #include <initializer_list>
+#include "mainwindow.h"
 
-#define BUFF_SIZE 24
-#define SPSC_CAPACITY 10000
+#define BUFF_SIZE 128
+#define SPSC_CAPACITY 1028
 
 template <typename T>
 class SerialcomHandler
@@ -88,6 +89,8 @@ private:
     std::string   regex_pattern_;
     command_map         commands_;
     bool                reading_flag_ = false;
+    unsigned short sleep_between_reads = SLEEP::SHORT;
+    unsigned short buffer_size = BUFF_SIZE;
 };
 template <typename T>
 SerialcomHandler<T>::SerialcomHandler() :
@@ -175,6 +178,8 @@ void SerialcomHandler<T>::start_concrete()
     }
 
     reading_flag_ = true;
+    sleep_between_reads = MainWindow::user_settings.getInterval();
+    buffer_size = MainWindow::user_settings.getBuffer();
     producer_thread_ = std::thread(&SerialcomHandler<T>::read_no_write, this);
 }
 
@@ -196,21 +201,28 @@ void SerialcomHandler<T>::read_no_write()
     std::regex r(regex_pattern_);
 
     std::cerr << regex_pattern_ << std::endl;
-
-    while ( reading_flag_ && is_open() && readings_.write_available()) {
-        unsigned char read_buff[BUFF_SIZE];
-        auto bytes_read = boost::asio::read(port_, boost::asio::buffer(&read_buff, BUFF_SIZE));
-
+    bool write_avail = false;
+    while ( reading_flag_ && is_open() && (write_avail= readings_.write_available())) {
+        unsigned char read_buff[buffer_size];
+        auto bytes_read = boost::asio::read(port_, boost::asio::buffer(&read_buff, buffer_size));
+        //auto bytes_read = boost::asio::read(port_, boost::asio::buffer(&read_buff, BUFF_SIZE), [](char c) { return c > 0; });
         std::string buff_str(read_buff, read_buff + bytes_read);
+        qDebug() << "bytes read: " << bytes_read;
+        int i = 0;
         for ( std::sregex_iterator beg_it(buff_str.begin(), buff_str.end(), r), end_it;
               beg_it != end_it; ++beg_it)
         {
-            qDebug() << QString::fromStdString(beg_it->str(1)) << ".";
+           // qDebug() << QString::fromStdString(beg_it->str(1)) << ".";
             readings_.push(T(beg_it->str(1)));
+            ++i;
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP::SHORT));
+      //  std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP::SHORT));
+        qDebug() << "number of readings: " << i;
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_between_reads));
     }
+        std::cerr << write_avail <<std::endl;
     }
+
     catch (const boost::system::system_error &e)
     {
         reset_port();
@@ -235,6 +247,7 @@ void SerialcomHandler<T>::start_sensor_readings (const std::string start, const 
 
         std::string buff_str(read_buff, read_buff + bytes_read);
 
+        std::cout << buff_str << std::endl;
         for ( std::sregex_iterator beg_it(buff_str.begin(), buff_str.end(), r), end_it;
               beg_it != end_it; ++beg_it)
         {

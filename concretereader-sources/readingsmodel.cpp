@@ -13,7 +13,7 @@ QVariant ReadingsModel::headerData(int section, Qt::Orientation orientation, int
 int ReadingsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
-        return 0;
+        return size_of_largest();
 
     // FIXME: Implement me!
 }
@@ -21,7 +21,7 @@ int ReadingsModel::rowCount(const QModelIndex &parent) const
 int ReadingsModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
-        return 2;
+        return m_loaded_readings.size();
 
     // FIXME: Implement me!
 }
@@ -32,5 +32,24 @@ QVariant ReadingsModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     // FIXME: Implement me!
+    if (role == Qt::DisplayRole)
+    {
+        if (index.column() < m_loaded_readings.size() && index.column() >= 0)
+        {
+            if (m_loaded_readings.at(index.column()).size() <= index.row())
+                return m_loaded_readings.at(index.column()).at(index.row());
+        }
+    }
     return QVariant();
+}
+
+QVector<QPoint>::size_type ReadingsModel::size_of_largest() const
+{
+    QVector<QPoint>::size_type max = 0;
+    for (auto &v : m_loaded_readings)
+        if (v.size() > max)
+            max = v.size();
+    return max;
+
+
 }

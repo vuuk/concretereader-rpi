@@ -2,6 +2,8 @@
 #define READINGSMODEL_H
 
 #include <QAbstractTableModel>
+#include <QVector>
+#include <QPoint>
 #define NUM_OF_LINES 4
 
 class ReadingsModel : public QAbstractTableModel
@@ -21,6 +23,9 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
+    QVector<QPoint>::size_type size_of_largest() const;
+private:
+    QVector<QVector<QPoint>> m_loaded_readings;
 };
 
 #endif // READINGSMODEL_H
