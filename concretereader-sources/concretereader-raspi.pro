@@ -49,7 +49,7 @@ INCLUDEPATH += /home/kirk/Boost/boost_1_64_0/
 
 LIBS += -L/home/kirk/Boost/boost_1_64_0/stage/lib/ -lboost_system
 LIBS += -L/home/kirk/Boost/boost_1_64_0/stage/lib/ -lboost_filesystem
-LIBS += -L/home/kirkBoost/boost_1_64_0/stage/lib/ -lboost_thread
+LIBS += -L/home/kirk/Boost/boost_1_64_0/stage/lib/ -lboost_thread
 
 
 # Default rules for deployment.
